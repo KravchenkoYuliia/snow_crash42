@@ -1,60 +1,87 @@
-# Security vulnerability for level01
-### Hashed password in `/etc/passwd`
-`/etc/passwd` file is the most important file in Linux operating system. This file stores essential information about the users on the system
+# Security Vulnerability for Level01
+
+## Hashed Password in `/etc/passwd`
+
+The `/etc/passwd` file is one of the most important files in a Linux operating system. It stores essential information about the users on the system.
 
 ![/etc/passwd](passwd_file.png)
 
-gfg	-> user name  
-x	-> indicates the password that is stored in `/etc/shadow` file in the encrypted format. Only autorized user have access to the `/etc/shadow` so the passwords are secured
+The structure of the file is:
 
-user `flag01` has the hash in `/etc/passwd` instead `x`, which is dangerous because every user can see it
+`gfg` - username
 
-## Find password for flag01 user
+`x` - indicates that the password is stored in the `/etc/shadow` file in an encrypted format. Only authorized users have access to `/etc/shadow`, so the passwords are protected.
 
-- check files that belong to flag00 user  
-```find / -user flag00 2>/dev/null```
+The `flag01` user has a password hash stored directly in `/etc/passwd` instead of `x`. This is dangerous because every user on the system can read this file.
 
-	Result: no files
+## Finding the Password for the `flag01` User
 
-- check word "flag01" in all the files  
-	
-	```ls /```  
+### 1. Check Files Belonging to the `flag00` User
 
-	check files of every directory  
-	```cat /dir_name/* | grep "flag01"```
+Check which files belong to the `flag00` user:
 
-	or 
+```bash
+find / -user flag00 2>/dev/null
+```
 
-	```find / -type f -exec grep -Hn "flag01" {} \; 2>/dev/null```  
-	-H shows file name
+Result: no files.
 
-	Result: suspicious line with `flag01` is in `/etc/passwd`  
+### 2. Search for flag01 in the Filesystem
 
-	`flag01:hashed_password`
-	the other lines has structure like this -> `flag00:x:`  
+Check the root directory:
+```bash
+ls /
+```
 
-- find hash type
+Check the files in each directory:
+```bash
+cat /dir_name/* | grep "flag01"
+```
 
-	[Hash types](https://hashcat.net/wiki/doku.php?id=example_hashes)  
-	Result: descrypt, DES (Unix), Traditional DES
+or 
 
-- find the tool to decrypt the code
+```bash
+find / -type f -exec grep -Hn "flag01" {} \; 2>/dev/null
+```
 
-	[Understanding DES Unix](https://www.onlinehashcrack.com/guides/cryptography-algorithms/understanding-des-unix-descrypt-.php#)
+The -H option displays the filename along with the matching line.
 
-	Result: tool `John the Ripper`
+Result: a suspicious line containing `flag01` is found in `/etc/passwd`:  
+`flag01:hashed_password`  
+The other user entries have a structure like this -> `flag00:x:`  
 
-- git clone John git repository
+### 3. Identify the Hash Type
 
-	[John repo](https://github.com/openwall/john/blob/bleeding-jumbo)  
-	```
-	cd src  
-	./configure && make  
-	cd ../run  
-	```
-	to execute:   
-	```./john file_with_password```
+Use a hash database to identify the hash type:
+[Hash types](https://hashcat.net/wiki/doku.php?id=example_hashes)  
 
-	Result: password to connect as user `flag01`
+Result: descrypt, DES (Unix), Traditional DES
 
-- getflag command shows password for the next level
+### 4. Find a Tool to Crack the Hash
+
+Read about the identified hash format:
+[Understanding DES Unix](https://www.onlinehashcrack.com/guides/cryptography-algorithms/understanding-des-unix-descrypt-.php#)
+
+Result: the recommended tool is `John the Ripper`.
+
+### 5. Install John the Ripper
+
+Clone the John the Ripper repository:
+[John repo](https://github.com/openwall/john/blob/bleeding-jumbo)  
+
+```bash
+cd src
+./configure && make
+cd ../run
+```
+
+To execute John the Ripper:   
+```bash
+./john file_with_password
+```
+
+Result: the password for the `flag01` user is recovered.
+
+### 6. Get the Password for the Next Level
+
+Use the getflag command to retrieve the password for the next level.

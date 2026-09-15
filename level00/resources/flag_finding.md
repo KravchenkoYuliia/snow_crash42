@@ -1,24 +1,44 @@
-# Security vulnerability for level00
-### File permission  
-Files owned by user `flag00` are visible to other users, anybody can see user's password inside these files
+# Security Vulnerability for Level00
 
-## Find password for flag00 user
+## File Permissions
 
-- connect as user level00
-- check files that belong to flag00 user  
-`find / -user flag00 2>/dev/null`
+Files owned by the `flag00` user are readable by other users. 
 
-	there are 2 results:  
-	`/usr/sbin/john`
-	`/rofs/usr/sbin/john`
+This means that anyone can access the files and potentially find sensitive information, such as the user's password.
 
-- both files has the same content - some ciphed code
+## Finding the Password for the `flag00` User
 
-- try different offsets with Cesar cipher
-	till we have smth readable  
-	
-	Found the answer with offset -11 on [Cesar cipher](https://cryptii.com/pipes/caesar-cipher/)
+### 1. Connect as the `level00` User
 
-- now we can connect as flag00 user
+### 2. Find Files Belonging to the `flag00` User
 
-- getflag command shows password for the next level
+```bash
+find / -user flag00 2>/dev/null
+```
+
+Result: two files are found:
+```bash
+`/usr/sbin/john`
+`/rofs/usr/sbin/john`
+```
+
+### 3. Inspect the Files
+
+Both files have the same permissions: `----r--r--`
+It means that other users have the right to read this file.
+
+Both files have the same content: an encrypted string.
+
+### 4. Identify the Cipher
+
+Try different offsets using Cesar cipher untill readable text is found.
+
+The correct answer is obtained with an offset of -11 using [Cesar cipher](https://cryptii.com/pipes/caesar-cipher/).
+
+### 5. Connect as the `flag00` User
+
+Use the obtained password to connect as the flag00 user.
+
+### 6. Get the Password for the Next Level
+
+Use the getflag command to retrieve the password for the next level.
