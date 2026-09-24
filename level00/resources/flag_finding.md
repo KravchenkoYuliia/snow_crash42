@@ -6,7 +6,7 @@ Files owned by the `flag00` user are readable by other users.
 
 This means that anyone can access the files and potentially find sensitive information, such as the user's password.
 
-## Finding the Password for the `flag00` User
+## Finding the Password for the `level01` User
 
 ### 1. Connect as the `level00` User
 

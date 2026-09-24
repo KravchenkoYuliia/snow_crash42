@@ -2,7 +2,7 @@
 
 The vulnerability is the command injection to the env variables, any user can modify the env variables. 
 
-## Finding the Password for the `Level08` User
+## Finding the Password for the `level08` User
 
 ### 1. Inspect the `/home/user/level07` Directory
 The directory `/home/user/level07` has 1 file: `level07` which is executable.

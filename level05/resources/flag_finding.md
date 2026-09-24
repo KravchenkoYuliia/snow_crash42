@@ -2,7 +2,7 @@
 
 The vulnerability is caused by a writable directory whose files are automatically executed with flag05 privileges; to prevent it, only trusted, non-writable files should be executed by the privileged cron job.
 
-## Finding the Password for the `flag05` User
+## Finding the Password for the `level06` User
 
 No files are provided on the root.
 

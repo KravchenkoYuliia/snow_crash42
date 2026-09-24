@@ -3,7 +3,7 @@
 The vulnerability is caused by executing a command by name through the PATH environment, which is controlled by any user.
 To avoid this vulnerability use a whole path `/bin/echo` instead.
 
-## Finding the Password for the `flag03` User
+## Finding the Password for the `level04` User
 
 ### 1. Inspect the `level03` Executable
 

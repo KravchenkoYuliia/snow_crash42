@@ -2,7 +2,7 @@
 
 The security flaw is that the password is transmitted over the network in plain text, without encryption.
 
-## Finding the Password for the `flag02` User
+## Finding the Password for the `level03` User
 
 Level02 provides a file called `level02.pcap`.
 

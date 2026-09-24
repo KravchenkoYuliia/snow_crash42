@@ -3,7 +3,7 @@
 The vulnerability is caused by the deprecated `e` modifier in `preg_replace()`.
 It is better to use the secure replacement as preg_replace_callback(), which doesn't execute the result of replacement.
 
-## Finding the Password for the `flag06` User
+## Finding the Password for the `level07` User
 
 ### 1. Investigate the Given Files
 

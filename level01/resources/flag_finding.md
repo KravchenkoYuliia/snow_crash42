@@ -14,7 +14,7 @@ The structure of the file is:
 
 The `flag01` user has a password hash stored directly in `/etc/passwd` instead of `x`. This is dangerous because every user on the system can read this file.
 
-## Finding the Password for the `flag01` User
+## Finding the Password for the `level02` User
 
 ### 1. Check Files Belonging to the `flag00` User
 
