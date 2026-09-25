@@ -8,15 +8,16 @@ The project consists of multiple levels. Each level provides a vulnerable enviro
 Throughout the project, I worked with:
 
 * Linux users, groups, and file permissions
-* Password and credential security
 * Binary analysis
 * PCAP files, data that is transmitted over a network
 * SUID/SGID permissions
 * Environment variables
-* OS command injection
+* Command injections
 * HTTP requests
 * CGI scripts
 * Perl language
+* Encoded passwords
+* TOCTOU race condition
 
 The project is provided by **42 as a bootable ISO image** containing the complete challenge environment.
 
