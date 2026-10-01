@@ -1,5 +1,6 @@
 # Security Vulnerability for Level13
 
+Any user without the required privileges can debug the program which means any user can interfere with the program using GDB.
 
 ## Finding the Password for the `level14` User
 
@@ -17,7 +18,7 @@ total 8
 Execute the file:
 ```bash
 ./level13 
-UID 2013 started us but we we expect 4242
+UID 2013 started us but we expect 4242
 ```
 
 Check the user ID:
@@ -25,8 +26,8 @@ Check the user ID:
 id level13
 uid=2013(level13) gid=2013(level13) groups=2013(level13),100(users)
 ```
-We see that `2013` is our current user's ID.  
-The program checks it before proceeding and stops the execution if the UID is not `4242`.
+We see that `2013` is our current user ID.  
+The program checks it before proceeding and stops execution if the UID is not `4242`.
 
 See the readable parts of the binary file:
 ```bash
@@ -43,31 +44,64 @@ your token is %s
 ;*2$"$
 ```
 
-We see that `getuid` is called. The result is checked.
+We see that `getuid` is called and its result is checked.
 
-We see `boe]!ai0FB@.:|L6l@A?>qJ}I` in code after the UID checking, it can be the password that only are shown for verified UID.
+We see `boe]!ai0FB@.:|L6l@A?>qJ}I` in the binary after the UID checking, it can be the password that is only displayed for verified UID. We need to find a possibility to interfere with the program during runtime to replace the return value of `getuid` with 4242.
 
-### 3. Understand `getuid` Function
+### 3. Interfere with the Program
 
-[Man page](https://man7.org/linux/man-pages/man2/geteuid.2.html):
-> getuid() returns the real user ID of the calling process.
-> geteuid() returns the effective user ID of the calling process.
+Open GDB to better see the program's behaviour.
 
-The **real UID** identifies the user who started the process, while the **effective UID** determines whose permissions the process actually uses.
+Open gdb:
+```bash
+gdb -tui ./level13
+layout asm
+```
 
-It can be the key to the flag getting if we can replace the **real UID**, level13, by **effective UID**, 4242.
-
-### 4. Find the Tool to Intercept During Execution of the `level13` Program
-
-Looking for linux intercept function call during execution.
-The result:
-
-> ptrace
-
-> ptrace is the API that debuggers like GDB use to do their debugging. There is a PTRACE_SYSCALL option which will pause execution just before/after syscalls. From there you can do pretty much whatever you like in the same way that GDB can. [Here's an article about how to modify syscall paramters using ptrace.](https://www.alfonsobeato.net/c/modifying-system-call-arguments-with-ptrace/)
-
-
-GDB !!!
+Start at `getuid` function and run the program:
+```bash
 b getuid
 r
-set rax value in return to 4242
+```
+
+Get into the function:
+```bash
+si
+```
+
+Move to the next line:
+```bash
+ni
+```
+
+Stop at the line
+```
+0xb7ee4ccc <getuid+12>          ret
+```
+and check what is in **eax** register:
+```bash
+(gdb)  p (int) $eax
+$1 = 2013
+```
+
+Assembly code returns its value in the `eax` register which means we can rewrite the register's value.
+
+Put 4242 into `eax` register:
+```bash
+set $eax=4242
+(gdb) p (int) $eax
+$2 = 4242
+```
+
+### 4. Get the Flag -> Level 14's Password
+
+Move through the assembly code, we successfully bypass the verification of the UID and reach the `ft_des` function. Print the values in registers that are used in `ft_des` function:
+```bash
+p (char*) $edx
+$3 = 0x8048709 "your token is %s\n"
+
+p (char*) $eax
+$4 = 0x804b008 "xxxxxx"
+```
+
+The password is found.
