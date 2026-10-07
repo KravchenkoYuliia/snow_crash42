@@ -13,11 +13,16 @@ Throughout the project, I worked with:
 * SUID/SGID permissions
 * Environment variables
 * Command injections
+* PATH hijacking
 * HTTP requests
 * CGI scripts
+* Cron jobs
+* Symlink attacks
 * Perl language
 * Encoded passwords
 * TOCTOU race condition
+* GDB debugging and assembly analysis
+* Assembly register manipulation
 
 The project is provided by **42 as a bootable ISO image** containing the complete challenge environment.
 
